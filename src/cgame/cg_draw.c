@@ -3748,11 +3748,6 @@ static void CG_Draw2D(void)
 		CG_DrawOnScreenBars();
 	}
 
-	if (!CG_DrawScoreboard() && cgs.clientinfo[cg.clientNum].shoutcaster && cg_shoutcastDrawPlayers.integer)
-	{
-		CG_DrawShoutcastPlayerList();
-	}
-
 	// no longer cheat protected, we draw crosshair/reticle in non demoplayback
 	if (cg_draw2D.integer == 0)
 	{
@@ -3815,6 +3810,11 @@ static void CG_Draw2D(void)
 		CG_DrawBannerPrint();
 
 		CG_SetHud();
+
+		if (cgs.clientinfo[cg.clientNum].shoutcaster && cg_shoutcastDrawPlayers.integer)
+		{
+			CG_DrawShoutcastPlayerList();
+		}
 
 #ifdef FEATURE_EDV
 		if (cg.snap->ps.persistant[PERS_TEAM] != TEAM_SPECTATOR && !cgs.demoCamera.renderingFreeCam && !cgs.demoCamera.renderingWeaponCam)
