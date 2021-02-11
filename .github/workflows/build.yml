@@ -51,7 +51,7 @@ jobs:
             build/legacy/ui*.so
 
   osx-mod:
-    runs-on: macos-10.15
+    runs-on: macos-11.0
     steps:
       - uses: actions/checkout@v2
         with:
@@ -61,9 +61,12 @@ jobs:
       - name: Install dependencies
         run: brew bundle
 
+      - name: List dev tools
+        run: ls -la /Applications/ | grep Xcode
+
       - name: Build
         env:
-          DEVELOPER_DIR: /Applications/Xcode_11.2.app/Contents/Developer
+          DEVELOPER_DIR: /Applications/Xcode_12.4.app/Contents/Developer
         shell: bash
         run: ./easybuild.sh build -64 -mod --osx=10.10
 
@@ -206,7 +209,7 @@ jobs:
             build/etlegacy-*.sh
 
   osx:
-    runs-on: macos-10.15
+    runs-on: macos-11.0
     needs: [ lnx32 ]
     steps:
       - uses: actions/checkout@v2
@@ -221,7 +224,7 @@ jobs:
 
       - name: Build
         env:
-          DEVELOPER_DIR: /Applications/Xcode_11.2.app/Contents/Developer
+          DEVELOPER_DIR: /Applications/Xcode_12.4.app/Contents/Developer
         shell: bash
         run: ./easybuild.sh build -64 --osx=10.10
 
@@ -301,11 +304,18 @@ jobs:
             osx-mod
             win-mod
 
+      - name: Get version status
+        id: vars
+        run: |
+          echo ::set-output name=hash_exists::$(curl -s -o /dev/null -w "%{http_code}" ${{ secrets.LEGACY_UPLOAD_CHECK_URL }}${{ github.sha }} 2>/dev/null)
+
       - uses: actions/download-artifact@v2
+        if: ${{ steps.vars.outputs.hash_exists == '404' }}
         with:
           path: packages
 
       - name: Upload packages
+        if: ${{ steps.vars.outputs.hash_exists == '404' }}
         shell: bash
         working-directory: packages
         run: |
