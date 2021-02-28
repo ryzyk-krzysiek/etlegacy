@@ -703,6 +703,10 @@ typedef struct
 #define LAG_MIN_DROP_THRESHOLD (LAG_MAX_DROP_THRESHOLD - 200)
 #define LAG_DECAY 1.02f
 
+//unlagged - true ping
+#define NUM_PING_SAMPLES 64
+//unlagged - true ping
+
 #ifdef FEATURE_MULTIVIEW
 
 #define MULTIVIEW_MAXVIEWS  16
@@ -829,6 +833,25 @@ typedef struct
 	int savedClassWeaponTimeFop;
 	int savedClassWeaponTimeCvop;
 	int savedClassWeaponTime;
+
+	//unlagged - client options
+	// these correspond with variables in the userinfo string
+	int			delag;
+	int			debugDelag;
+	int			cmdTimeNudge;
+	//unlagged - client options
+	//unlagged - lag simulation #2
+	int			latentSnaps;
+	int			latentCmds;
+	int			plOut;
+	usercmd_t	cmdqueue[MAX_LATENT_CMDS];
+	int			cmdhead;
+	//unlagged - lag simulation #2
+	//unlagged - true ping
+	int			realPing;
+	int			pingsamples[NUM_PING_SAMPLES];
+	int			samplehead;
+	//unlagged - true ping
 
 } clientPersistant_t;
 
@@ -1024,6 +1047,8 @@ struct gclient_s
 	qboolean freezed;                       ///< client is frozen see PM_FREEZE
 
 	int constructSoundTime;                 ///< construction sound time
+
+	int attackTime;
 };
 
 /**
@@ -2125,6 +2150,18 @@ extern vmCvar_t g_xpSaver;
 extern vmCvar_t g_dynamiteChaining;
 
 extern vmCvar_t g_playerHitBoxHeight;
+
+//unlagged - server options
+// some new server-side variables
+extern	vmCvar_t	g_delagHitscan;
+extern	vmCvar_t	g_unlaggedVersion;
+extern	vmCvar_t	g_truePing;
+// server admins can adjust this if they *believe* the lightning 
+// gun is too powerful with lag compensation
+extern	vmCvar_t	g_lightningDamage;
+// this is for convenience - using "sv_fps.integer" is nice :)
+extern	vmCvar_t	sv_fps;
+//unlagged - server options
 
 /**
  * @struct GeoIPTag

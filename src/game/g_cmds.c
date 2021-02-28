@@ -428,6 +428,8 @@ void G_SendScore(gentity_t *ent)
 
 	*buffer      = '\0';
 	*startbuffer = '\0';
+	int		ping;
+	gclient_t	*cl;
 
 #ifdef FEATURE_RATING
 	if (g_skillRating.integer)
@@ -454,6 +456,12 @@ void G_SendScore(gentity_t *ent)
 	// added on to the sc1 command.
 	for (; i < numSorted; ++i)
 	{
+		//unlagged - true ping
+		cl = &level.clients[level.sortedClients[i]];
+		//ping = cl->ps.ping < 999 ? cl->ps.ping : 999;
+		ping = cl->pers.realPing < 999 ? cl->pers.realPing : 999;
+		//unlagged - true ping
+
 		// the old version of SendScore() did this.  I removed it
 		// originally because it seemed like an unneccessary hack.
 		// perhaps it is necessary for compat with CG_Argv()?

@@ -2799,6 +2799,20 @@ extern vmCvar_t cg_fontScaleCN;
 extern vmCvar_t cg_optimizePrediction;
 extern vmCvar_t cg_debugPlayerHitboxes;
 
+//unlagged - client options
+extern	vmCvar_t		cg_delag;
+extern	vmCvar_t		cg_debugDelag;
+extern	vmCvar_t		cg_drawBBox;
+extern	vmCvar_t		cg_cmdTimeNudge;
+extern	vmCvar_t		sv_fps;
+extern	vmCvar_t		cg_projectileNudge;
+extern	vmCvar_t		cg_optimizePrediction;
+extern	vmCvar_t		cl_timeNudge;
+extern	vmCvar_t		cg_latentSnaps;
+extern	vmCvar_t		cg_latentCmds;
+extern	vmCvar_t		cg_plOut;
+//unlagged - client options
+
 // scoreboard
 extern vmCvar_t cg_scoreboard;
 

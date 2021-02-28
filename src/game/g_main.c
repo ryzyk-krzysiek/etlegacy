@@ -368,6 +368,14 @@ vmCvar_t g_dynamiteChaining;
 
 vmCvar_t g_playerHitBoxHeight;
 
+//unlagged - server options
+vmCvar_t	g_delagHitscan;
+vmCvar_t	g_unlaggedVersion;
+vmCvar_t	g_truePing;
+vmCvar_t	g_lightningDamage;
+vmCvar_t	sv_fps;
+//unlagged - server options
+
 cvarTable_t gameCvarTable[] =
 {
 	// don't override the cheat state set by the system
@@ -657,6 +665,15 @@ cvarTable_t gameCvarTable[] =
 	{ &g_xpSaver,                         "g_xpSaver",                         "0",                          CVAR_ARCHIVE,                                    0, qfalse, qfalse },
     { &g_dynamiteChaining,                "g_dynamiteChaining",                "0",                          CVAR_ARCHIVE,                                    0, qfalse, qfalse },
     { &g_playerHitBoxHeight,              "g_playerHitBoxHeight",              "36",                         CVAR_ARCHIVE | CVAR_SERVERINFO,                  0, qfalse, qfalse },
+
+		//unlagged - server options
+	{ &g_delagHitscan, "g_delagHitscan", "1", CVAR_ARCHIVE | CVAR_SERVERINFO, 0, qtrue },
+	{ &g_unlaggedVersion, "g_unlaggedVersion", "2.0", CVAR_ROM | CVAR_SERVERINFO, 0, qfalse },
+	{ &g_truePing, "g_truePing", "1", CVAR_ARCHIVE, 0, qtrue },
+	{ &g_lightningDamage, "g_lightningDamage", "8", 0, 0, qtrue },
+		// it's CVAR_SYSTEMINFO so the client's sv_fps will be automagically set to its value
+	{ &sv_fps, "sv_fps", "20", CVAR_SYSTEMINFO | CVAR_ARCHIVE, 0, qfalse },
+		//unlagged - server options
 };
 
 /**

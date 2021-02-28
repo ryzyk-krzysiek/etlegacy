@@ -1991,6 +1991,11 @@ void CG_DrawActiveFrame(int serverTime, qboolean demoPlayback)
 	cgDC.realTime   = cg.time;
 	cg.demoPlayback = demoPlayback;
 
+	//unlagged - lag simulation #1
+	// adjust the clock to reflect latent snaps
+	cg.time -= cg_latentSnaps.integer * 50;
+	//unlagged - lag simulation #1
+
 #ifdef FAKELAG
 	cg.time -= snapshotDelayTime;
 #endif // FAKELAG

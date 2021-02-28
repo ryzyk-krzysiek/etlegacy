@@ -183,7 +183,7 @@ void G_StoreClientPosition(gentity_t *ent)
  * @param[in] time timestamp which to use
  * @return true if adjusted, otherwise false
  */
-static qboolean G_AdjustSingleClientPosition(gentity_t *ent, int time)
+static qboolean G_AdjustSingleClientPosition(gentity_t *ent, int time, gentity_t *debugger)
 {
 	int i, j;
 
@@ -365,7 +365,6 @@ static qboolean G_AdjustSingleClientPosition(gentity_t *ent, int time)
 			ent->timeShiftTime = ent->client->clientMarkers[i].time;
 		}
 
-		/* FIXME
 		if ( debugger && debugger->client) {
 		    // print some debugging stuff exactly like what the client does
 		    // it starts with "Rec:" to let you know it backward-reconciled
@@ -388,7 +387,6 @@ static qboolean G_AdjustSingleClientPosition(gentity_t *ent, int time)
 
 		    trap_SendServerCommand( debugger - g_entities, msg );
 		}
-		*/
 	}
 	else
 	{
@@ -520,7 +518,7 @@ static void G_AdjustClientPositions(gentity_t *skip, int time, qboolean backward
 
 		if (backwards)
 		{
-			G_AdjustSingleClientPosition(list, time);
+			G_AdjustSingleClientPosition(list, time + 50, skip);
 		}
 		else
 		{
@@ -698,7 +696,7 @@ void G_HistoricalTrace(gentity_t *ent, trace_t *results, const vec3_t start, con
 		return;
 	}
 
-	G_AdjustClientPositions(ent, ent->client->pers.cmd.serverTime, qtrue);
+	G_AdjustClientPositions(ent, ent->client->attackTime, qtrue);
 
 	G_Trace(ent, results, start, mins, maxs, end, passEntityNum, contentmask);
 
@@ -716,7 +714,8 @@ void G_HistoricalTraceBegin(gentity_t *ent)
 	{
 		return;
 	}
-	G_AdjustClientPositions(ent, ent->client->pers.cmd.serverTime, qtrue);
+	G_AdjustClientPositions(ent, ent->client->attackTime, qtrue);
+	//G_AdjustClientPositions(ent, ent->client->pers.cmd.serverTime, qtrue); 
 }
 
 /**

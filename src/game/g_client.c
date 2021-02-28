@@ -1804,6 +1804,42 @@ void ClientUserinfoChanged(int clientNum)
 		}
 	}
 
+	//unlagged - client options
+	// see if the player has opted out
+	s = Info_ValueForKey(userinfo, "cg_delag");
+	if (!atoi(s)) {
+		client->pers.delag = 0;
+	}
+	else {
+		client->pers.delag = atoi(s);
+	}
+
+	// see if the player is nudging his shots
+	s = Info_ValueForKey(userinfo, "cg_cmdTimeNudge");
+	client->pers.cmdTimeNudge = atoi(s);
+
+	// see if the player wants to debug the backward reconciliation
+	s = Info_ValueForKey(userinfo, "cg_debugDelag");
+	if (!atoi(s)) {
+		client->pers.debugDelag = qfalse;
+	}
+	else {
+		client->pers.debugDelag = qtrue;
+	}
+
+	// see if the player is simulating incoming latency
+	s = Info_ValueForKey(userinfo, "cg_latentSnaps");
+	client->pers.latentSnaps = atoi(s);
+
+	// see if the player is simulating outgoing latency
+	s = Info_ValueForKey(userinfo, "cg_latentCmds");
+	client->pers.latentCmds = atoi(s);
+
+	// see if the player is simulating outgoing packet loss
+	s = Info_ValueForKey(userinfo, "cg_plOut");
+	client->pers.plOut = atoi(s);
+	//unlagged - client options
+
 	// overwrite empty names with a default name, but do not kick those players ...
 	// (player did delete the profile or profile can't be read)
 	if (strlen(cs_name) == 0)
