@@ -1835,6 +1835,68 @@ void G_RegisterCvars(void)
 	}
 }
 
+float jumpVelocity;
+
+/**
+* @brief G_SetJumpVelocity
+*
+* Calculate jump velocity for g_fixedphysics 2 for given g_gravity and g_fixedphysicsfps (etpro mod like physics)
+*/
+static void G_SetJumpVelocity(void)
+{
+	float frametime, endVelocity;
+	float velocity = 270.0f;
+	float height   = 0.0f;
+	float gravity  = g_gravity.value;
+	int   fps      = g_fixedphysicsfps.integer;
+
+	if (fps > 333)
+	{
+		fps = 333;
+	}
+	if (fps < 30)
+	{
+		fps = 30;
+	}
+
+	frametime = (int)(1000.0f / fps) * 0.001f;
+
+	while (1)
+	{
+		endVelocity = velocity - gravity * frametime;
+		velocity    = (velocity + endVelocity) * 0.5f;
+
+		// if we start falling down
+		if (velocity < 0.0f)
+		{
+			// new jump velocity
+			jumpVelocity = sqrt(gravity * height + gravity * height) + 0.2f;
+			return;
+		}
+
+		// move up
+		height = height + velocity * frametime;
+
+		// always round up even for fps setting that wouldn't
+		if (endVelocity > 0.0f)
+		{
+			endVelocity = endVelocity + 0.5f;
+		}
+		else
+		{
+			endVelocity = endVelocity - 0.5f;
+		}
+
+		velocity = rint(endVelocity);
+		if (velocity >= 270.0f)
+		{
+			Com_Printf("G_SetJumpVelocity: jump never falls\n");
+			jumpVelocity = 270.0f;
+			return;
+		}
+	}
+}
+
 /**
  * @brief G_UpdateCvars
  */
@@ -2036,6 +2098,12 @@ void G_UpdateCvars(void)
 #ifdef FEATURE_MULTIVIEW
 					Info_SetValueForKey(cs, "MV", va("%i", g_multiview.integer));
 #endif
+
+					if (g_fixedphysics.integer == 2 || (g_fixedphysics.integer == 2 && (cv->vmCvar == &g_fixedphysicsfps || cv->vmCvar == &g_gravity)))
+					{
+						G_SetJumpVelocity();
+						Info_SetValueForKey(cs, "jv", va("%f", jumpVelocity));
+					}
 
 					trap_SetConfigstring(CS_MODINFO, cs);
 				}

@@ -352,6 +352,8 @@ void CG_ParseModInfo(void)
 #ifdef FEATURE_MULTIVIEW
 	cgs.mvAllowed = Q_atoi(Info_ValueForKey(info, "MV"));
 #endif
+
+	cgs.jumpVelocity = Q_atof(Info_ValueForKey(info, "jv"));
 }
 
 /**

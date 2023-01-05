@@ -54,15 +54,18 @@ typedef enum
 #define PM_FIXEDPHYSICS         cgs.fixedphysics
 #define PM_FIXEDPHYSICSFPS      cgs.fixedphysicsfps
 #define PM_PRONEDELAY           cgs.pronedelay
+#define PM_JUMPVELOCITY         cgs.jumpVelocity
 
 #else
 extern vmCvar_t g_fixedphysics;
 extern vmCvar_t g_fixedphysicsfps;
 extern vmCvar_t g_pronedelay;
+extern float    jumpVelocity;
 
 #define PM_FIXEDPHYSICS         g_fixedphysics.integer
 #define PM_FIXEDPHYSICSFPS      g_fixedphysicsfps.integer
 #define PM_PRONEDELAY           g_pronedelay.integer
+#define PM_JUMPVELOCITY         jumpVelocity
 
 #endif
 
@@ -806,7 +809,15 @@ static qboolean PM_CheckJump(void)
 	pm->ps->pm_flags |= PMF_JUMP_HELD;
 
 	pm->ps->groundEntityNum = ENTITYNUM_NONE;
-	pm->ps->velocity[2]     = JUMP_VELOCITY;
+
+	if (PM_FIXEDPHYSICS == 2)
+	{
+		pm->ps->velocity[2] = PM_JUMPVELOCITY;
+	}
+	else
+	{
+		pm->ps->velocity[2] = JUMP_VELOCITY;
+	}
 
 	if (pm->cmd.forwardmove >= 0)
 	{
@@ -4950,6 +4961,8 @@ void PM_Sprint(void)
 			pm->ps->sprintExertTime = 0;
 		}
 	}
+
+	pm->ps->stats[STAT_SPRINTTIME] = pm->pmext->sprintTime;
 }
 
 void trap_SnapVector(float *v);
@@ -5291,6 +5304,11 @@ void PmoveSingle(pmove_t *pmove)
 	// entering / leaving water splashes
 	PM_WaterEvents();
 
+	if (PM_FIXEDPHYSICS == 2)
+	{
+		return;
+	}
+
 	if (PM_FIXEDPHYSICS)
 	{
 		// If fractional part of computed velocity[2] which is based on gravity and frametime
@@ -5336,8 +5354,6 @@ void PmoveSingle(pmove_t *pmove)
 		// snap some parts of playerstate to save network bandwidth
 		trap_SnapVector(pm->ps->velocity);
 	}
-
-	pm->ps->stats[STAT_SPRINTTIME] = pm->pmext->sprintTime;
 }
 
 /**

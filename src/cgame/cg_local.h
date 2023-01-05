@@ -2649,6 +2649,8 @@ typedef struct cgs_s
 	int sv_fps;                 // FPS server wants to send
 	sampledStat_t sampledStat;  // fps client sample data
 
+	float jumpVelocity;         // jump velocity for g_fixedphysics 2
+
 } cgs_t;
 
 //==============================================================================
