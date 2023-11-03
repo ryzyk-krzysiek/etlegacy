@@ -3977,7 +3977,7 @@ static void PM_Weapon(void)
 		}
 	}
 
-	if (GetWeaponTableData(pm->ps->weapon)->type & WEAPON_TYPE_SET)
+	if (CHECKBITWISE(GetWeaponTableData(pm->ps->weapon)->type, WEAPON_TYPE_MG | WEAPON_TYPE_SET))
 	{
 		pm->ps->viewlocked = VIEWLOCK_JITTER;             // this enable screen jitter when firing
 	}
